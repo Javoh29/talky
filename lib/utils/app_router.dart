@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:talky/features/auth/pages/forgot_password_page.dart';
+import 'package:talky/features/auth/pages/sign_in_mail_page.dart';
 import 'package:talky/features/auth/pages/sign_in_page.dart';
 import 'package:talky/features/auth/pages/sign_up_mail_otp_page.dart';
 import 'package:talky/features/auth/pages/sign_up_mail_page.dart';
@@ -18,10 +20,10 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => const SignUpPage(),
         );
-      // case AppRouteNames.signInMailPage:
-      //   return MaterialPageRoute(
-      //     builder: (context) => const SignInMailPage(),
-      //   );
+      case AppRouteNames.signInMailPage:
+        return MaterialPageRoute(
+          builder: (context) => const SignInMailPage(),
+        );
 
       case AppRouteNames.signUpMailPage:
         return MaterialPageRoute(
@@ -34,10 +36,10 @@ class AppRouter {
             password: args?['password'],
           ),
         );
-      // case AppRouteNames.forgotPasswordPage:
-      //   return MaterialPageRoute(
-      //     builder: (context) => const ForgotPasswordPage(),
-      //   );
+      case AppRouteNames.forgotPasswordPage:
+        return MaterialPageRoute(
+          builder: (context) => const ForgotPasswordPage(),
+        );
       case AppRouteNames.createProfilePage:
         return MaterialPageRoute(
           builder: (context) => const CreateProfilePage(),

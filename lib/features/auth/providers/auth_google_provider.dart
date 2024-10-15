@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -14,6 +15,10 @@ class AuthGoogleProvider extends ChangeNotifier {
   Future<void> signInGoogle() async {
     _updateState(Statuses.loading);
     try {
+      final gSignIn = GoogleSignIn();
+      if (await gSignIn.isSignedIn()) {
+        await gSignIn.signOut();
+      }
       final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
       if (gUser != null) {
         final GoogleSignInAuthentication gAuth = await gUser.authentication;
@@ -23,6 +28,8 @@ class AuthGoogleProvider extends ChangeNotifier {
         );
         await auth.signInWithCredential(cred);
         _updateState(Statuses.completed);
+      } else {
+        _updateState(Statuses.initial);
       }
     } catch (e) {
       _updateState(Statuses.error);

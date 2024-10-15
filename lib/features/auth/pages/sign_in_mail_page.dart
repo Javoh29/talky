@@ -4,23 +4,23 @@ import 'package:talky/core/ui_kit/custom_app_bar.dart';
 import 'package:talky/core/ui_kit/custom_text_form.dart';
 import 'package:talky/core/ui_kit/custom_text_form_with_icon.dart';
 import 'package:talky/core/ui_kit/primary_button.dart';
-import 'package:talky/features/auth/providers/sing_up_provider.dart';
-import 'package:talky/features/auth/widgets/check_agreement.dart';
+import 'package:talky/features/auth/providers/sign_in_provider.dart';
 import 'package:talky/features/auth/widgets/floor_text.dart';
+import 'package:talky/features/auth/widgets/forgot_password_button.dart';
 import 'package:talky/features/auth/widgets/wrong_password_email.dart';
 import 'package:talky/features/splash/widgets/text_talky.dart';
 import 'package:talky/utils/app_colors.dart';
 import 'package:talky/utils/app_route_names.dart';
 import 'package:talky/utils/app_string.dart';
 
-class SignUpMailPage extends StatefulWidget {
-  const SignUpMailPage({super.key});
+class SignInMailPage extends StatefulWidget {
+  const SignInMailPage({super.key});
 
   @override
-  State<SignUpMailPage> createState() => _SignUpMailPageState();
+  State<SignInMailPage> createState() => _SignInMailPageState();
 }
 
-class _SignUpMailPageState extends State<SignUpMailPage> {
+class _SignInMailPageState extends State<SignInMailPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -35,26 +35,20 @@ class _SignUpMailPageState extends State<SignUpMailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        func: () {
-          Navigator.pop(context);
-        },
+        func: () => Navigator.pop(context),
       ),
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: ChangeNotifierProvider(
-        create: (context) => SingUpProvider(),
-        child: Consumer<SingUpProvider>(
+        create: (context) => SignInProvider(),
+        child: Consumer<SignInProvider>(
           builder: (context, value, child) {
             if (value.state.isCompleted) {
               Future.delayed(
                 Duration.zero,
                 () => Navigator.pushNamed(
                   context,
-                  AppRouteNames.signUpMailOtpPage,
-                  arguments: {
-                    'email': emailController.text,
-                    "password": passwordController.text,
-                  },
+                  AppRouteNames.createProfilePage,
                 ),
               );
             }
@@ -71,7 +65,7 @@ class _SignUpMailPageState extends State<SignUpMailPage> {
                     ),
                   ),
                   const Text(
-                    AppString.signUpEmail,
+                    AppString.signInWithEmail,
                     style: TextStyle(
                       color: AppColors.blackText,
                       fontSize: 18,
@@ -97,32 +91,28 @@ class _SignUpMailPageState extends State<SignUpMailPage> {
                   const SizedBox(
                     height: 18,
                   ),
-                  if (value.state.isError && value.errorText != null)
+                  if (value.state.isError)
                     WrongPasswordEmail(
-                      text: value.errorText ?? '',
+                      text: value.errorText,
                     ),
+                  ForgotPasswordButton(
+                    func: () {
+                      Navigator.pushNamed(
+                          context, AppRouteNames.forgotPasswordPage);
+                    },
+                  ),
                   const SizedBox(
                     height: 26,
                   ),
-                  CheckAgreement(
-                    isChooseCheck: value.isChooseCheck,
-                    isChecked: value.isChecked,
-                    agreement: AppString.agreement,
-                    terms: AppString.terms,
-                    func: (check) => value.checkedCheckBox(check),
-                  ),
                   const Spacer(),
                   PrimaryButton(
-                    text: AppString.signUp,
+                    text: AppString.signIn,
                     isLoading: value.state.isLoading,
                     func: () {
-                      if (value.isChecked) {
-                        value.sentEmail(
-                          email: emailController.text,
-                        );
-                      } else {
-                        value.chooseCheckFunc();
-                      }
+                      value.authByEmail(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      );
                     },
                   ),
                   const SizedBox(
@@ -130,11 +120,11 @@ class _SignUpMailPageState extends State<SignUpMailPage> {
                   ),
                   FloorText(
                     text1: AppString.haveAccount,
-                    text2: AppString.signInHere,
+                    text2: AppString.signUpHere,
                     func: () {
                       Navigator.pushNamed(
                         context,
-                        AppRouteNames.signInPage,
+                        AppRouteNames.signUpPage,
                       );
                     },
                   ),

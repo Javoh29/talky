@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>72653874847-9o0ocjhb3fdtgmd6tp3h7m0g6crrtsr0.apps.googleusercontent.com</string>
+	<string>610568315359-sh52dfgmthjg0a1dp91ctoqprf94jv34.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.72653874847-9o0ocjhb3fdtgmd6tp3h7m0g6crrtsr0</string>
+	<string>com.googleusercontent.apps.610568315359-sh52dfgmthjg0a1dp91ctoqprf94jv34</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>72653874847-a00acih62nspnrhrom90e64c3mmcd18e.apps.googleusercontent.com</string>
+	<string>610568315359-rcvi38gep5tdbk75r4nu4eagrjdl5k5j.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAV8SLfzDhNzHZH9F5w6tdzmI0q2CLTHms</string>
+	<string>AIzaSyB1oqiTSNs5yuEeKKSiZE9JgnSwWfLFuOw</string>
 	<key>GCM_SENDER_ID</key>
-	<string>72653874847</string>
+	<string>610568315359</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.simpl.talky</string>
 	<key>PROJECT_ID</key>
-	<string>talky-app-b7fdc</string>
+	<string>talky-app-2</string>
 	<key>STORAGE_BUCKET</key>
-	<string>talky-app-b7fdc.appspot.com</string>
+	<string>talky-app-2.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:72653874847:ios:9a41daf3630dd9233324aa</string>
+	<string>1:610568315359:ios:ca3a33d46dafae797a646a</string>
 </dict>
 </plist>

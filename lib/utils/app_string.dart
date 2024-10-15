@@ -30,4 +30,8 @@ class AppString {
   static const String enterName = 'Enter your name or nickname';
   static const String enterDescription = 'Enter a description';
   static const String complete = 'Complete';
+
+  //forgot password
+  static const String forgotPasswordSend =
+      'Message for reset password have sent';
 }

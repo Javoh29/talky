@@ -50,19 +50,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD3O2-ndxgBfOxyD1XZlgr8oKTTmDFpw0A',
-    appId: '1:72653874847:android:d11afed42bc7fa923324aa',
-    messagingSenderId: '72653874847',
-    projectId: 'talky-app-b7fdc',
-    storageBucket: 'talky-app-b7fdc.appspot.com',
+    apiKey: 'AIzaSyC2js_ZkF4fVRsmeHHzaH8WNnc2-GojQcw',
+    appId: '1:610568315359:android:c4819cf57a82ea9b7a646a',
+    messagingSenderId: '610568315359',
+    projectId: 'talky-app-2',
+    storageBucket: 'talky-app-2.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAV8SLfzDhNzHZH9F5w6tdzmI0q2CLTHms',
-    appId: '1:72653874847:ios:9a41daf3630dd9233324aa',
-    messagingSenderId: '72653874847',
-    projectId: 'talky-app-b7fdc',
-    storageBucket: 'talky-app-b7fdc.appspot.com',
+    apiKey: 'AIzaSyB1oqiTSNs5yuEeKKSiZE9JgnSwWfLFuOw',
+    appId: '1:610568315359:ios:ca3a33d46dafae797a646a',
+    messagingSenderId: '610568315359',
+    projectId: 'talky-app-2',
+    storageBucket: 'talky-app-2.appspot.com',
+    androidClientId: '610568315359-rcvi38gep5tdbk75r4nu4eagrjdl5k5j.apps.googleusercontent.com',
+    iosClientId: '610568315359-sh52dfgmthjg0a1dp91ctoqprf94jv34.apps.googleusercontent.com',
     iosBundleId: 'com.simpl.talky',
   );
 }
