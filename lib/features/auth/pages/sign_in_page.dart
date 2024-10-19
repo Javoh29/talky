@@ -9,6 +9,7 @@ import 'package:talky/utils/app_colors.dart';
 import 'package:talky/utils/app_icons.dart';
 import 'package:talky/utils/app_route_names.dart';
 import 'package:talky/utils/app_string.dart';
+import 'package:talky/utils/profile_state.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
@@ -35,6 +36,23 @@ class SignInPage extends StatelessWidget {
                 const Spacer(),
                 Consumer<AuthGoogleProvider>(
                   builder: (context, value, child) {
+                    if (value.state.isCompleted) {
+                      String route = AppRouteNames.signInPage;
+                      if (value.profileState == ProfileState.completed) {
+                        route = AppRouteNames.mainPage;
+                      } else if (value.profileState == ProfileState.create) {
+                        route = AppRouteNames.createProfilePage;
+                      }
+                      Future.delayed(
+                        Duration.zero,
+                        () => {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            route,
+                          )
+                        },
+                      );
+                    }
                     return CustomIconRectangleButton(
                       iconPath: AppIcons.googleIcon.icon,
                       text: AppString.signInGoogle,

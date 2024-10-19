@@ -4,16 +4,19 @@ import 'package:provider/provider.dart';
 import 'package:talky/core/ui_kit/custom_app_bar.dart';
 import 'package:talky/core/ui_kit/custom_text_form.dart';
 import 'package:talky/core/ui_kit/primary_button.dart';
-import 'package:talky/features/profile/models/user_data_model.dart';
 import 'package:talky/features/profile/providers/create_profile_provider.dart';
 import 'package:talky/utils/app_colors.dart';
 import 'package:talky/utils/app_icons.dart';
+import 'package:talky/utils/app_route_names.dart';
 import 'package:talky/utils/app_string.dart';
 
 class CreateProfilePage extends StatefulWidget {
   const CreateProfilePage({
+    required this.isOnBack,
     super.key,
   });
+
+  final bool isOnBack;
 
   @override
   State<CreateProfilePage> createState() => _CreateProfilePageState();
@@ -34,11 +37,16 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar(
-        func: () {
-          Navigator.pop(context);
-        },
-      ),
+      appBar: widget.isOnBack
+          ? CustomAppBar(
+              func: () {
+                Navigator.pop(context);
+              },
+            )
+          : AppBar(
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.white,
+            ),
       resizeToAvoidBottomInset: false,
       body: ChangeNotifierProvider(
         create: (context) => CreateProfileProvider(),
@@ -48,6 +56,15 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
             ),
             child: Consumer<CreateProfileProvider>(
               builder: (context, value, child) {
+                if (value.state.isCompleted) {
+                  Future.delayed(
+                    Duration.zero,
+                    () => Navigator.pushNamed(
+                      context,
+                      AppRouteNames.mainPage,
+                    ),
+                  );
+                }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [

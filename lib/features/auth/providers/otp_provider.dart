@@ -1,31 +1,48 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:talky/core/base/base_change_notifier.dart';
+import 'package:talky/features/profile/models/user_model.dart';
+import 'package:talky/utils/profile_state.dart';
 import 'package:talky/utils/statuses.dart';
 
-class OtpProvider extends ChangeNotifier {
-  FirebaseAuth auth = FirebaseAuth.instance;
+class OtpProvider extends BaseChangeNotifier {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseFirestore firebaseStore = FirebaseFirestore.instance;
   bool isCorrect = true;
-  Statuses _state = Statuses.initial;
   List<String> otpCodes = [];
 
-  Statuses get state => _state;
 
   Future<void> registration({
     required String email,
     required String password,
   }) async {
-    _updateState(Statuses.loading);
+    updateState(Statuses.loading);
     try {
       await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      _updateState(Statuses.completed);
+      updateState(Statuses.completed);
+
+      final user = auth.currentUser;
+      if (user != null) {
+        final doc = firebaseStore.collection('users').doc(user.uid);
+        await doc.set(
+          UserModel(
+            email: email,
+            uid: user.uid,
+            profileState: ProfileState.create,
+          ).toJson(),
+        );
+      } else {
+        updateState(Statuses.error);
+      }
     } catch (e) {
-      _updateState(Statuses.error);
+      updateState(Statuses.error);
       log(e.toString());
     }
   }
@@ -49,10 +66,5 @@ class OtpProvider extends ChangeNotifier {
 
   void toList(List<TextEditingController> controllers) {
     otpCodes = controllers.map((controller) => controller.text).toList();
-  }
-
-  void _updateState(Statuses value) {
-    _state = value;
-    notifyListeners();
   }
 }

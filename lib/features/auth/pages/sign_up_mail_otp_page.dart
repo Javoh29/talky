@@ -70,6 +70,9 @@ class _SignUpMailOtpPageState extends State<SignUpMailOtpPage> {
                   () => Navigator.pushNamed(
                     context,
                     AppRouteNames.createProfilePage,
+                    arguments: {
+                      'isBack': true,
+                    },
                   ),
                 );
               }

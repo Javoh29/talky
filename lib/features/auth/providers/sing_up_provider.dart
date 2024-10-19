@@ -2,21 +2,18 @@ import 'dart:developer';
 
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:talky/core/base/base_change_notifier.dart';
 import 'package:talky/utils/app_string.dart';
 import 'package:talky/utils/statuses.dart';
 
-class SingUpProvider extends ChangeNotifier {
+class SingUpProvider extends BaseChangeNotifier {
   FirebaseAuth auth = FirebaseAuth.instance;
-  Statuses _state = Statuses.initial;
   String? errorText;
   bool isChecked = false;
   bool isChooseCheck = false;
 
-  Statuses get state => _state;
-
   Future<void> sentEmail({required String email}) async {
-    _updateState(Statuses.loading);
+    updateState(Statuses.loading);
     try {
       EmailOTP.config(
         appEmail: AppString.appMail,
@@ -27,13 +24,13 @@ class SingUpProvider extends ChangeNotifier {
       );
       final isSend = await EmailOTP.sendOTP(email: email);
       if (isSend) {
-        _updateState(Statuses.completed);
+        updateState(Statuses.completed);
       } else {
         errorText = 'Couldn\'t send OTP';
       }
     } catch (e) {
       errorText = 'Couldn\'t send OTP';
-      _updateState(Statuses.error);
+      updateState(Statuses.error);
       log(e.toString());
     }
   }
@@ -54,10 +51,5 @@ class SingUpProvider extends ChangeNotifier {
     sanitized = sanitized.replaceAll(RegExp(r'//.*'), '');
     sanitized = sanitized.replaceAll(RegExp(r'/\*.*?\*/'), '');
     return sanitized.trim();
-  }
-
-  void _updateState(Statuses value) {
-    _state = value;
-    notifyListeners();
   }
 }

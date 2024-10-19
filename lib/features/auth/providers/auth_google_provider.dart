@@ -2,18 +2,19 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:talky/core/base/base_change_notifier.dart';
+import 'package:talky/features/profile/models/user_model.dart';
+import 'package:talky/utils/profile_state.dart';
 import 'package:talky/utils/statuses.dart';
 
-class AuthGoogleProvider extends ChangeNotifier {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  Statuses _state = Statuses.initial;
-
-  Statuses get state => _state;
+class AuthGoogleProvider extends BaseChangeNotifier {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseFirestore firebaseStore = FirebaseFirestore.instance;
+  ProfileState profileState = ProfileState.initial;
 
   Future<void> signInGoogle() async {
-    _updateState(Statuses.loading);
+    updateState(Statuses.loading);
     try {
       final gSignIn = GoogleSignIn();
       if (await gSignIn.isSignedIn()) {
@@ -27,18 +28,38 @@ class AuthGoogleProvider extends ChangeNotifier {
           idToken: gAuth.idToken,
         );
         await auth.signInWithCredential(cred);
-        _updateState(Statuses.completed);
+        final user = auth.currentUser;
+        if (user != null) {
+          final doc = firebaseStore.collection('users').doc(user.uid);
+          final json = await doc.get();
+          try {
+            profileState = UserModel.fromJson(
+                  json.data() ?? {},
+                ).profileState ??
+                ProfileState.initial;
+          } catch (e) {
+            log("UserModel failed: $e");
+          }
+          if (profileState == ProfileState.initial) {
+            await doc.set(
+              UserModel(
+                email: user.email,
+                uid: user.uid,
+                profileState: ProfileState.create,
+              ).toJson(),
+            );
+            profileState = ProfileState.create;
+          }
+          updateState(Statuses.completed);
+        } else {
+          updateState(Statuses.error);
+        }
       } else {
-        _updateState(Statuses.initial);
+        updateState(Statuses.initial);
       }
     } catch (e) {
-      _updateState(Statuses.error);
+      updateState(Statuses.error);
       log("Google Sign-In failed: $e");
     }
-  }
-
-  void _updateState(Statuses value) {
-    _state = value;
-    notifyListeners();
   }
 }

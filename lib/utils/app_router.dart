@@ -5,6 +5,7 @@ import 'package:talky/features/auth/pages/sign_in_page.dart';
 import 'package:talky/features/auth/pages/sign_up_mail_otp_page.dart';
 import 'package:talky/features/auth/pages/sign_up_mail_page.dart';
 import 'package:talky/features/auth/pages/sign_up_page.dart';
+import 'package:talky/features/main/pages/main_page.dart';
 import 'package:talky/features/profile/pages/create_profile_page.dart';
 import 'package:talky/utils/app_route_names.dart';
 
@@ -42,7 +43,13 @@ class AppRouter {
         );
       case AppRouteNames.createProfilePage:
         return MaterialPageRoute(
-          builder: (context) => const CreateProfilePage(),
+          builder: (context) => CreateProfilePage(
+            isOnBack: args?['isBack'] ?? false,
+          ),
+        );
+      case AppRouteNames.mainPage:
+        return MaterialPageRoute(
+          builder: (context) => const MainPage(),
         );
       default:
         return MaterialPageRoute(

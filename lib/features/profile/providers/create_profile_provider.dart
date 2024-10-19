@@ -5,18 +5,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:talky/features/profile/models/user_data_model.dart';
+import 'package:talky/core/base/base_change_notifier.dart';
+import 'package:talky/features/profile/models/user_model.dart';
+import 'package:talky/utils/profile_state.dart';
 import 'package:talky/utils/statuses.dart';
 
-class CreateProfileProvider extends ChangeNotifier {
+class CreateProfileProvider extends BaseChangeNotifier {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   FirebaseFirestore firebaseStore = FirebaseFirestore.instance;
-
-  Statuses _state = Statuses.initial;
-  Statuses get state => _state;
 
   File? selectedImage;
   String? selectedName;
@@ -63,27 +61,28 @@ class CreateProfileProvider extends ChangeNotifier {
     required String name,
     required String description,
   }) async {
-    _updateState(Statuses.loading);
+    updateState(Statuses.loading);
     try {
       final image = await imageUpload();
-      User? user = auth.currentUser;
-      final doc = firebaseStore.collection('users').doc(user!.uid);
-      await doc.set(
-          UserDataModel(
-            name: name,
-            description: description,
-            image: image,
-          ).toJson(),
-          SetOptions(merge: true));
-      _updateState(Statuses.completed);
+      final user = auth.currentUser;
+      if (user != null) {
+        final doc = firebaseStore.collection('users').doc(user.uid);
+        await doc.set(
+            UserModel(
+              name: name,
+              description: description,
+              image: image,
+              profileState: ProfileState.completed,
+            ).toJson(),
+            SetOptions(merge: true));
+        updateState(Statuses.completed);
+      } else {
+        updateState(Statuses.error);
+        errorText = "User not found!";
+      }
     } catch (e) {
-      _updateState(Statuses.error);
+      updateState(Statuses.error);
       errorText = "Error saving user data: $e";
     }
-  }
-
-  void _updateState(Statuses value) {
-    _state = value;
-    notifyListeners();
   }
 }
