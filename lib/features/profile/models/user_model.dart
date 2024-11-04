@@ -7,6 +7,7 @@ class UserModel {
   final String? uid;
   final String? description;
   final ProfileState? profileState;
+  final DateTime? lastTime;
 
   const UserModel({
     this.email,
@@ -15,6 +16,7 @@ class UserModel {
     this.description,
     this.uid,
     this.profileState,
+    this.lastTime,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -24,8 +26,11 @@ class UserModel {
         description: json['description'],
         uid: json['uid'],
         profileState: ProfileState.fromString(
-          json['profile_state'],
+          json['profile_state'] ?? ProfileState.initial,
         ),
+        lastTime: json['last_time'] != null && json['last_time'] is int
+            ? DateTime.fromMillisecondsSinceEpoch(json['last_time'])
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -35,5 +40,6 @@ class UserModel {
         if (description != null) 'description': description,
         if (uid != null) 'uid': uid,
         if (profileState != null) 'profile_state': profileState?.name,
+        if (lastTime != null) 'last_time': lastTime?.millisecondsSinceEpoch,
       };
 }

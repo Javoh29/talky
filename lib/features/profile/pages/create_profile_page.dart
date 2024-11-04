@@ -79,7 +79,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                             backgroundColor: AppColors.avatarColor,
                             child: value.selectedImage == null
                                 ? SvgPicture.asset(
-                                    AppIcons.profileIcon.icon,
+                                    AppIcons.profile.icon,
                                     height: 40,
                                   )
                                 : Center(

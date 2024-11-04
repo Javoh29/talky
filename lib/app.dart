@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:talky/core/services/user_state_service.dart';
+import 'package:talky/features/profile/providers/user_provider.dart';
 import 'package:talky/features/splash/pages/splash_page.dart';
 import 'package:talky/utils/app_colors.dart';
 import 'package:talky/utils/app_router.dart';
@@ -26,16 +29,29 @@ class _AppState extends State<App> {
   }
 
   @override
+  void dispose() {
+    UserStateService.instance.stopTimer();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return KeyedSubtree(
       key: key,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primaryColor: AppColors.primaryBlue,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => UserProvider(),
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primaryColor: AppColors.primaryBlue,
+          ),
+          onGenerateRoute: AppRouter.generateRoute,
+          home: const SplashPage(),
         ),
-        onGenerateRoute: AppRouter.generateRoute,
-        home: const SplashPage(),
       ),
     );
   }

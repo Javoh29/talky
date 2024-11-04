@@ -1,16 +1,16 @@
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:talky/core/base/base_change_notifier.dart';
+import 'package:talky/core/services/user_data_service.dart';
 import 'package:talky/features/profile/models/user_model.dart';
 import 'package:talky/utils/profile_state.dart';
 import 'package:talky/utils/statuses.dart';
 
 class AuthGoogleProvider extends BaseChangeNotifier {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  final FirebaseFirestore firebaseStore = FirebaseFirestore.instance;
+  final userDataService = UserDataService.instance;
   ProfileState profileState = ProfileState.initial;
 
   Future<void> signInGoogle() async {
@@ -30,8 +30,7 @@ class AuthGoogleProvider extends BaseChangeNotifier {
         await auth.signInWithCredential(cred);
         final user = auth.currentUser;
         if (user != null) {
-          final doc = firebaseStore.collection('users').doc(user.uid);
-          final json = await doc.get();
+          final json = await userDataService.getUserDoc();
           try {
             profileState = UserModel.fromJson(
                   json.data() ?? {},
@@ -41,7 +40,7 @@ class AuthGoogleProvider extends BaseChangeNotifier {
             log("UserModel failed: $e");
           }
           if (profileState == ProfileState.initial) {
-            await doc.set(
+            await userDataService.setUserDoc(
               UserModel(
                 email: user.email,
                 uid: user.uid,

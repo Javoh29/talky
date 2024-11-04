@@ -56,7 +56,7 @@ class SignUpPage extends StatelessWidget {
                       );
                     }
                     return CustomIconRectangleButton(
-                      iconPath: AppIcons.googleIcon.icon,
+                      iconPath: AppIcons.google.icon,
                       text: AppString.signInGoogle,
                       func: () => value.signInGoogle(),
                       isLoading: value.state.isLoading,
@@ -68,7 +68,7 @@ class SignUpPage extends StatelessWidget {
                   child: OrDivider(),
                 ),
                 CustomIconRectangleButton(
-                  iconPath: AppIcons.emailIcon.icon,
+                  iconPath: AppIcons.email.icon,
                   text: AppString.continueEmail,
                   func: () {
                     Navigator.pushNamed(

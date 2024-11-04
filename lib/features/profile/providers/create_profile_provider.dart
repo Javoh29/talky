@@ -3,19 +3,16 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:talky/core/base/base_change_notifier.dart';
+import 'package:talky/core/services/user_data_service.dart';
 import 'package:talky/features/profile/models/user_model.dart';
 import 'package:talky/utils/profile_state.dart';
 import 'package:talky/utils/statuses.dart';
 
 class CreateProfileProvider extends BaseChangeNotifier {
-  FirebaseAuth auth = FirebaseAuth.instance;
-
-  FirebaseFirestore firebaseStore = FirebaseFirestore.instance;
-
+  final userDataService = UserDataService.instance;
   File? selectedImage;
   String? selectedName;
   String failedUpload = '';
@@ -64,22 +61,17 @@ class CreateProfileProvider extends BaseChangeNotifier {
     updateState(Statuses.loading);
     try {
       final image = await imageUpload();
-      final user = auth.currentUser;
-      if (user != null) {
-        final doc = firebaseStore.collection('users').doc(user.uid);
-        await doc.set(
-            UserModel(
-              name: name,
-              description: description,
-              image: image,
-              profileState: ProfileState.completed,
-            ).toJson(),
-            SetOptions(merge: true));
-        updateState(Statuses.completed);
-      } else {
-        updateState(Statuses.error);
-        errorText = "User not found!";
-      }
+      await userDataService.setUserDoc(
+        UserModel(
+          name: name,
+          description: description,
+          image: image,
+          profileState: ProfileState.completed,
+          lastTime: DateTime.now(),
+        ).toJson(),
+        SetOptions(merge: true),
+      );
+      updateState(Statuses.completed);
     } catch (e) {
       updateState(Statuses.error);
       errorText = "Error saving user data: $e";

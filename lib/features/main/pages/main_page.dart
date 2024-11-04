@@ -1,31 +1,33 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:talky/app.dart';
+import 'package:provider/provider.dart';
+import 'package:talky/core/services/user_state_service.dart';
+import 'package:talky/features/main/widgets/main_page_app_bar.dart';
+import 'package:talky/features/profile/providers/user_provider.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   const MainPage({super.key});
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        context.read<UserProvider>().getUserModel();
+        UserStateService.instance.startTimer();
+      },
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text('Main Page'),
-            TextButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut().then((value) {
-                  App.restartApp(context);
-                });
-              },
-              child: const Text('Logout'),
-            )
-          ],
-        ),
-      ),
+      appBar: MainPageAppBar(),
+      // body: ,
     );
   }
 }
