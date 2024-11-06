@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:talky/features/auth/pages/forgot_password_page.dart';
 import 'package:talky/features/auth/pages/sign_in_mail_page.dart';
 import 'package:talky/features/auth/pages/sign_in_page.dart';
@@ -48,7 +49,7 @@ class AppRouter {
           ),
         );
       case AppRouteNames.mainPage:
-        return MaterialPageRoute(
+        return MaterialWithModalsPageRoute(
           builder: (context) => const MainPage(),
         );
       default:

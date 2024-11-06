@@ -24,6 +24,7 @@ dependencies:
   permission_handler: ^11.3.1
   file_picker: ^8.1.2
   cached_network_image: ^3.4.1
+  modal_bottom_sheet: ^3.0.0
 
 dev_dependencies:
   flutter_test:
